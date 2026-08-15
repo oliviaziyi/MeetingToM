@@ -293,25 +293,15 @@ def reconstruct_state(
     media_dir = sample_root / "media"
     media_dir.mkdir(parents=True, exist_ok=True)
 
-    early = rec["windows"]["early"]
-    late = rec["windows"]["late"]
+    window = rec["source_window"]
 
     cut_video_with_audio(
         ffmpeg,
         source_video,
         source_audio,
-        early["start"],
-        early["duration"],
-        media_dir / "target_closeup_0.mp4",
-    )
-
-    cut_video_with_audio(
-        ffmpeg,
-        source_video,
-        source_audio,
-        late["start"],
-        late["duration"],
-        media_dir / "target_closeup_1.mp4",
+        window["start"],
+        window["duration"],
+        media_dir / "clip.mp4",
     )
 
 

@@ -23,21 +23,15 @@ MeetingToM is constructed from meeting sessions in the **AMI Meeting Corpus**.
 
 MeetingToM contains three tasks:
 
-| Task | Instances | Q1 | Q2 |
-|---|---:|---|---|
-| **STATE** | 300 | Early mental state | Late mental state |
-| **YOU** | 300 | Addressee | Conversational stance |
-| **CONSENSUS** | 300 | Consensus quality | Dissenter |
+| Task | Source bundles | Evaluation records | Questions | Gold answers |
+|---|---:|---:|---|---:|
+| **STATE** | 300 | 600 | Q1: Mental state | 600 |
+| **YOU** | 300 | 300 | Q1: Addressee; Q2: Conversational stance | 600 |
+| **CONSENSUS** | 300 | 300 | Q1: Consensus quality; Q2: Dissenter | 600 |
 
-Each benchmark instance contains two questions.
+The complete benchmark contains **900 source bundles**, expanded into **1,200 evaluation records** with **1,800 gold answers**.
 
-The complete release therefore contains:
-
-- **300 STATE instances**
-- **300 YOU instances**
-- **300 CONSENSUS instances**
-- **900 benchmark instances in total**
-- **1,800 gold answers in total**
+For STATE, each source bundle contributes two independently evaluated 5-second clips. The same mental-state question is asked for both clips, and each released STATE record contains a single `Q1` answer.
 
 ---
 
@@ -45,16 +39,16 @@ The complete release therefore contains:
 
 ### STATE — Individual Mental-State Reasoning
 
-STATE evaluates whether a model can infer how a target participant's mental state changes within a short meeting segment.
+STATE evaluates the mental state of a target participant on independently evaluated short meeting clips.
 
-For each STATE instance:
+Each original STATE source bundle is split into two 5-second evaluation records:
 
-- **Q1** corresponds to the **first 5 seconds** of the source window.
-- **Q2** corresponds to the **last 5 seconds** of the source window.
+- `window_index = 0`: the first 5 seconds of the original source window.
+- `window_index = 1`: the last 5 seconds of the original source window.
 
-Both questions use the target participant's close-up view together with the corresponding meeting audio.
+The **same mental-state question (`Q1`)** is asked for both records. The two records are evaluated independently and are not two different question types.
 
-This task focuses on temporal changes in individual cognitive and attentional states.
+Each record uses the target participant's close-up view together with the corresponding meeting audio.
 
 ### YOU — Addressee and Stance Reasoning
 
@@ -128,7 +122,11 @@ data/you.jsonl
 data/consensus.jsonl
 ```
 
-Each file contains **300 benchmark instances**.
+The released files contain:
+
+- `data/state.jsonl`: **600 independent evaluation records**
+- `data/you.jsonl`: **300 evaluation records**
+- `data/consensus.jsonl`: **300 evaluation records**
 
 These released JSONL files are the final source of truth for MeetingToM evaluation.
 
@@ -136,13 +134,14 @@ These released JSONL files are the final source of truth for MeetingToM evaluati
 
 ```json
 {
-  "id": "state:ES2002a_state0004",
+  "id": "state:ES2002a_state0004_w0",
   "task": "state",
-  "bundle_name": "ES2002a_state0004",
+  "bundle_name": "ES2002a_state0004_w0",
+  "source_bundle_name": "ES2002a_state0004",
   "session_id": "ES2002a",
+  "window_index": 0,
   "answers": {
-    "Q1": "COGNITIVE_CONFLICT",
-    "Q2": "FOCUSED_LISTENING"
+    "Q1": "COGNITIVE_CONFLICT"
   }
 }
 ```
@@ -184,27 +183,39 @@ These released JSONL files are the final source of truth for MeetingToM evaluati
 The final benchmark contains:
 
 ```text
+Source bundles
 STATE         300
 YOU           300
 CONSENSUS     300
 -----------------
-Total         900 instances
+Total         900
 
-Questions per instance: 2
-Total gold answers: 1,800
+Evaluation records
+STATE         600
+YOU           300
+CONSENSUS     300
+-----------------
+Total       1,200
+
+Gold answers
+STATE         600
+YOU           600
+CONSENSUS     600
+-----------------
+Total       1,800
 ```
 
-Benchmark IDs were checked against the released reconstruction metadata:
+Evaluation IDs were checked against the released reconstruction metadata:
 
 ```text
-Benchmark instances       900
-Unique benchmark IDs      900
-Reconstruction entries    900
-Missing reconstruction      0
-Extra reconstruction        0
+Evaluation records       1,200
+Unique evaluation IDs    1,200
+Reconstruction entries   1,200
+Missing reconstruction       0
+Extra reconstruction         0
 ```
 
-Every released benchmark instance therefore has exactly one corresponding reconstruction specification.
+Every released evaluation record therefore has exactly one corresponding reconstruction specification.
 
 ---
 
@@ -217,9 +228,9 @@ metadata/reconstruction.jsonl
 metadata/reconstruction_summary.json
 ```
 
-`reconstruction.jsonl` provides the information required to reconstruct each benchmark instance from an authorized local copy of the AMI Meeting Corpus.
+`reconstruction.jsonl` provides the information required to reconstruct each evaluation record from an authorized local copy of the AMI Meeting Corpus.
 
-The reconstruction metadata is aligned one-to-one with the released benchmark instances and contains information such as:
+The reconstruction metadata is aligned one-to-one with the released evaluation records and contains information such as:
 
 - task,
 - benchmark bundle identity,
@@ -271,10 +282,13 @@ When both standard AMI camera files and `_orig` variants are present, the recons
 
 ### STATE
 
-STATE uses the target participant's close-up view.
+Each released STATE record reconstructs one independent 5-second clip using the target participant's close-up view.
 
-- **Q1:** first 5 seconds of the source window.
-- **Q2:** last 5 seconds of the source window.
+Two records originate from each source bundle:
+
+- `window_index = 0`: first 5 seconds of the original source window.
+- `window_index = 1`: last 5 seconds of the original source window.
+- **Question:** the same `Q1` mental-state question for both records.
 - **Audio:** corresponding `Mix-Headset` audio.
 
 ### YOU
@@ -495,16 +509,11 @@ STATE reports:
 - **Accuracy**
 - **Macro-F1**
 
-The two temporal windows are evaluated jointly.
+STATE metrics are computed over the **600 independent STATE evaluation records**.
 
-For each STATE instance:
+Each record contains one gold mental-state label under `answers.Q1`. The original source-bundle and temporal-window identity are retained through `source_bundle_name` and `window_index`.
 
-```text
-window 0 → gold Q1
-window 1 → gold Q2
-```
-
-The evaluator preserves the prediction convention used in the benchmark experiments: the prediction label for each STATE window is extracted from the model output's `Q1` field, including the second temporal window.
+The evaluator preserves the prediction convention used in the benchmark experiments: each STATE prediction is extracted from the model output's `Q1` field.
 
 ---
 

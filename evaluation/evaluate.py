@@ -568,10 +568,39 @@ def load_gold_multi(gt_paths: List[Path]) -> Dict[str, Any]:
             tnorm = task.lower()
 
             if tnorm.startswith("state"):
-                if ans.get("Q1") is not None:
-                    gold_state[(bundle, 0)] = normalize_label(ans["Q1"], set(STATE_LABELS)) or str(ans["Q1"])
-                if ans.get("Q2") is not None:
-                    gold_state[(bundle, 1)] = normalize_label(ans["Q2"], set(STATE_LABELS)) or str(ans["Q2"])
+                # Public STATE format:
+                # one record = one independently evaluated clip = one Q1 answer.
+                #
+                # source_bundle_name keeps compatibility with prediction files,
+                # which identify the original source bundle plus window_index.
+                if (
+                    row.get("source_bundle_name") is not None
+                    and row.get("window_index") is not None
+                ):
+                    source_bundle = str(row["source_bundle_name"])
+                    try:
+                        widx = int(row["window_index"])
+                    except Exception:
+                        continue
+
+                    if ans.get("Q1") is not None:
+                        gold_state[(source_bundle, widx)] = (
+                            normalize_label(ans["Q1"], set(STATE_LABELS))
+                            or str(ans["Q1"])
+                        )
+
+                # Backward compatibility with the earlier bundled format.
+                else:
+                    if ans.get("Q1") is not None:
+                        gold_state[(bundle, 0)] = (
+                            normalize_label(ans["Q1"], set(STATE_LABELS))
+                            or str(ans["Q1"])
+                        )
+                    if ans.get("Q2") is not None:
+                        gold_state[(bundle, 1)] = (
+                            normalize_label(ans["Q2"], set(STATE_LABELS))
+                            or str(ans["Q2"])
+                        )
 
             elif tnorm == "you":
                 d = gold_you.setdefault(bundle, {})
