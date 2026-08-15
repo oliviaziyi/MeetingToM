@@ -571,7 +571,7 @@ def main():
     ap.add_argument(
         "--metadata",
         required=True,
-        help="release_v1/metadata/reconstruction.jsonl",
+        help="Path to metadata/reconstruction.jsonl",
     )
 
     ap.add_argument(
