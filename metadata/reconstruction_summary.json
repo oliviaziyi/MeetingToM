@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "total_instances": 900,
+  "total_gold_answers": 1800,
+  "tasks": {
+    "state": 300,
+    "you": 300,
+    "consensus": 300
+  },
+  "media_source": "AMI Meeting Corpus",
+  "media_distribution": "AMI media is not redistributed with MeetingToM. Users must obtain authorized access to the AMI Meeting Corpus separately and reconstruct benchmark media locally using the provided metadata and scripts.",
+  "reconstruction": {
+    "state": {
+      "description": "Reconstruct the target participant's close-up view.",
+      "Q1": "First 5 seconds of the source window.",
+      "Q2": "Last 5 seconds of the source window."
+    },
+    "you": {
+      "description": "Q1 uses the Corner view. Q2 uses a 2x2 mosaic of Closeup1, Closeup2, Closeup3, and Closeup4.",
+      "Q1_and_Q2_share_source_window": true
+    },
+    "consensus": {
+      "description": "Both questions use a 2x2 mosaic of Closeup1, Closeup2, Closeup3, and Closeup4.",
+      "Q1_and_Q2_share_source_window": true
+    }
+  },
+  "mosaic_layout": {
+    "top_left": "Closeup1",
+    "top_right": "Closeup2",
+    "bottom_left": "Closeup3",
+    "bottom_right": "Closeup4"
+  },
+  "notes": {
+    "reconstruction_metadata_contains_gold_answers": false,
+    "internal_paths_in_release_metadata": false
+  }
+}
