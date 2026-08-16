@@ -2,6 +2,8 @@
 
 **MeetingToM: Evaluating Multimodal LLMs on Theory-of-Mind Reasoning in Multi-Party Meetings**
 
+[Paper](https://arxiv.org/abs/2607.19235) · [Hugging Face](https://huggingface.co/datasets/OliviaWang1101/MeetingToM) · [Project Page](https://oliviaziyi.github.io/MeetingToM-Project-Page/)
+
 MeetingToM is a multimodal benchmark for evaluating **Theory-of-Mind (ToM) reasoning in multi-party meetings**.
 
 Rather than focusing only on visual recognition or transcript understanding, MeetingToM evaluates whether multimodal large language models can reason about the evolving mental and social states of participants in realistic group interactions.
@@ -39,16 +41,13 @@ For STATE, each source bundle contributes two independently evaluated 5-second c
 
 ### STATE — Individual Mental-State Reasoning
 
-STATE evaluates the mental state of a target participant on independently evaluated short meeting clips.
+STATE evaluates whether a model can infer the mental state of a target participant from a short meeting clip.
 
-Each original STATE source bundle is split into two 5-second evaluation records:
+Each STATE evaluation record contains an independently evaluated **5-second clip** of the target participant together with the corresponding meeting audio.
 
-- `window_index = 0`: the first 5 seconds of the original source window.
-- `window_index = 1`: the last 5 seconds of the original source window.
+The model answers one mental-state question (`Q1`) for each record.
 
-The **same mental-state question (`Q1`)** is asked for both records. The two records are evaluated independently and are not two different question types.
-
-Each record uses the target participant's close-up view together with the corresponding meeting audio.
+Each source bundle contributes two independent STATE evaluation records, producing **600 STATE records** in total.
 
 ### YOU — Addressee and Stance Reasoning
 
@@ -89,6 +88,8 @@ Both questions use the same **2×2 close-up mosaic** and refer to the same tempo
 ```text
 MeetingToM/
 ├── README.md
+├── LICENSE-CODE
+├── LICENSE-DATA
 ├── data/
 │   ├── state.jsonl
 │   ├── you.jsonl
@@ -128,7 +129,7 @@ The released files contain:
 - `data/you.jsonl`: **300 evaluation records**
 - `data/consensus.jsonl`: **300 evaluation records**
 
-These released JSONL files are the final source of truth for MeetingToM evaluation.
+These JSONL files define the canonical MeetingToM benchmark annotations and are mirrored on Hugging Face for dataset access and Dataset Viewer support.
 
 ### STATE Example
 
@@ -412,12 +413,13 @@ python evaluation/evaluate.py \
 
 The evaluator detects STATE, YOU, and CONSENSUS prediction files from the prediction directory.
 
-The public release keeps the final result table:
+The evaluator writes the aggregated result table to the directory specified by `--out_dir`:
 
 ```text
-results/
-└── overall_summary.csv
+overall_summary.csv
 ```
+
+Model predictions and experimental result files are not included in the public release.
 
 ---
 
@@ -646,13 +648,12 @@ Authors:
 
 If you use MeetingToM in your research, please cite the MeetingToM paper.
 
-The BibTeX below is a temporary placeholder and should be updated once final publication metadata is available.
-
 ```bibtex
 @article{wang2026meetingtom,
-  title  = {MeetingToM: Evaluating Multimodal LLMs on Theory-of-Mind Reasoning in Multi-Party Meetings},
-  author = {Wang, Ziyi and Wu, Yuhang and Piao, Dongxu and Liu, Xingyu and Zhou, Tianhui and Liu, Miao},
-  year   = {2026}
+  title   = {MeetingToM: Evaluating Multimodal LLMs on Theory-of-Mind Reasoning in Multi-Party Meetings},
+  author  = {Wang, Ziyi and Wu, Yuhang and Piao, Dongxu and Liu, Xingyu and Zhou, Tianhui and Liu, Miao},
+  journal = {arXiv preprint arXiv:2607.19235},
+  year    = {2026}
 }
 ```
 
