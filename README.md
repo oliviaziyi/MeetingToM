@@ -131,6 +131,8 @@ The released files contain:
 
 These JSONL files define the canonical MeetingToM benchmark annotations and are mirrored on Hugging Face for dataset access and Dataset Viewer support.
 
+Each record includes the benchmark question text and valid answer options under `questions`, while `answers` contains the adjudicated reference labels.
+
 ### STATE Example
 
 ```json
@@ -143,6 +145,20 @@ These JSONL files define the canonical MeetingToM benchmark annotations and are 
   "window_index": 0,
   "answers": {
     "Q1": "COGNITIVE_CONFLICT"
+  },
+  "questions": {
+    "Q1": {
+      "text": "What is participant A's state in the given video?",
+      "options": [
+        "DISENGAGED_WITHDRAWAL",
+        "HESITATION",
+        "CONFUSED_BEWILDERMENT",
+        "COGNITIVE_CONFLICT",
+        "SUPPORTIVE_ENDORSEMENT",
+        "FOCUSED_LISTENING",
+        "ACTIVE_ENGAGEMENT"
+      ]
+    }
   }
 }
 ```
@@ -158,6 +174,28 @@ These JSONL files define the canonical MeetingToM benchmark annotations and are 
   "answers": {
     "Q1": "MULTIPLE",
     "Q2": "NEUTRAL"
+  },
+  "questions": {
+    "Q1": {
+      "text": "In this clip, when B says 'you' around 15.0s, who specifically is B referring to?",
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "MULTIPLE",
+        "UNKNOWN"
+      ]
+    },
+    "Q2": {
+      "text": "What is MULTIPLE's attitude toward B's statement?",
+      "options": [
+        "SUPPORT",
+        "OPPOSE",
+        "NEUTRAL",
+        "UNCERTAIN"
+      ]
+    }
   }
 }
 ```
@@ -173,6 +211,27 @@ These JSONL files define the canonical MeetingToM benchmark annotations and are 
   "answers": {
     "Q1": "TRUE_CONSENSUS",
     "Q2": "NONE"
+  },
+  "questions": {
+    "Q1": {
+      "text": "What is the quality of group consensus at this moment?",
+      "options": [
+        "TRUE_CONSENSUS",
+        "PSEUDO_CONSENSUS",
+        "NO_CONSENSUS",
+        "UNCERTAIN"
+      ]
+    },
+    "Q2": {
+      "text": "If pseudo-consensus, who appears to have weak buy-in or hidden disagreement?",
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "NONE"
+      ]
+    }
   }
 }
 ```
@@ -513,7 +572,7 @@ STATE reports:
 
 STATE metrics are computed over the **600 independent STATE evaluation records**.
 
-Each record contains one gold mental-state label under `answers.Q1`. The original source-bundle and temporal-window identity are retained through `source_bundle_name` and `window_index`.
+Each record contains one benchmark question under `questions.Q1`, including its valid answer options, and one adjudicated reference label under `answers.Q1`. The original source-bundle and temporal-window identity are retained through `source_bundle_name` and `window_index`.
 
 The evaluator preserves the prediction convention used in the benchmark experiments: each STATE prediction is extracted from the model output's `Q1` field.
 
