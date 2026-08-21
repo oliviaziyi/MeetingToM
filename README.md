@@ -87,32 +87,67 @@ Both questions use the same **2×2 close-up mosaic** and refer to the same tempo
 
 ```text
 MeetingToM/
+
 ├── README.md
 ├── LICENSE-CODE
+
 ├── LICENSE-DATA
+
 ├── data/
 │   ├── state.jsonl
 │   ├── you.jsonl
 │   └── consensus.jsonl
+
 ├── metadata/
 │   ├── reconstruction.jsonl
 │   └── reconstruction_summary.json
+
 ├── scripts/
 │   ├── reconstruct.py
 │   └── build_mosaic.py
-└── evaluation/
-    └── evaluate.py
+
+├── evaluation/
+│   └── evaluate.py
+
+├── docs/
+│   ├── annotation_guidelines.md
+│   └── generation_protocol.md
+
+└── prompts/
+    ├── question_generation.md
+    └── evaluation.md
 ```
 
-The release is intentionally compact:
+The release is organized into the following components:
 
-- `data/` contains the final benchmark annotations.
-- `metadata/` contains media reconstruction specifications.
-- `scripts/` contains local media reconstruction utilities.
+- `data/` contains the final benchmark annotations, including benchmark questions, answer options, and adjudicated reference labels.
+
+- `metadata/` contains reconstruction specifications required to locally reproduce benchmark media from an authorized copy of the AMI Meeting Corpus.
+
+- `scripts/` contains utilities for benchmark media reconstruction and visual input preparation.
+
 - `evaluation/` contains the official benchmark evaluator.
 
+- `docs/` provides documentation describing annotation procedures and benchmark construction methodology.
+
+- `prompts/` provides the prompts used for benchmark question generation and model evaluation.
 ---
 
+## Documentation
+
+The MeetingToM release provides additional documentation describing benchmark construction, annotation procedures, and question generation.
+
+- [Annotation Guidelines](docs/annotation_guidelines.md)
+  Detailed annotation guidelines for the three benchmark tasks, including label definitions, decision criteria, annotation principles, and common edge cases.
+
+- [Generation Protocol](docs/generation_protocol.md)
+  Documentation of the benchmark construction process, including question formulation, annotation workflow, validation, and quality control procedures.
+
+- [Question Generation Prompts](prompts/question_generation.md)
+  Prompts used during benchmark question construction.
+
+- [Evaluation Prompts](prompts/evaluation.md)
+  Prompts used for model evaluation experiments.
 ## Benchmark Data
 
 The final benchmark annotations are stored in:
