@@ -349,6 +349,8 @@ MeetingToM does not distribute, mirror, or re-host AMI video or audio files.
 
 Users must obtain authorized access to AMI separately and use the source media in accordance with the applicable AMI terms.
 
+Aligned transcript context used in MeetingToM is derived from the official AMI manual annotations. MeetingToM does not redistribute AMI transcripts as a separate artifact. To reproduce transcript-conditioned inputs, users should obtain the AMI manual annotations from the official AMI Corpus release and align them to the released `session_id` and `source_window` fields.
+
 A typical local AMI layout expected by the reconstruction pipeline is:
 
 ```text
