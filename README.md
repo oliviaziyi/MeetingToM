@@ -390,9 +390,9 @@ Two records originate from each source bundle:
 
 ### YOU
 
-- **Q1:** AMI Corner view, without audio.
+- **Q1:** AMI Corner view with `Mix-Headset` audio.
 - **Q2:** 2×2 close-up mosaic with `Mix-Headset` audio.
-- Q1 and Q2 share the same source time window.
+- Q1 and Q2 share the same source time window and corresponding audio.
 
 ### CONSENSUS
 
