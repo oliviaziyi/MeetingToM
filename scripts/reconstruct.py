@@ -392,16 +392,23 @@ def reconstruct_you(
     start = rec["source_window"]["start"]
     duration = rec["source_window"]["duration"]
 
-    # Q1 = Corner, intentionally video-only.
+    # Q1 = Corner + the same Mix-Headset audio source used by Q2.
     corner = resolve_video(
         ami_root,
         session_id,
         "Corner",
     )
 
-    cut_video_only(
+    source_audio = resolve_audio(
+        ami_root,
+        audio_root,
+        session_id,
+    )
+
+    cut_video_with_audio(
         ffmpeg,
         corner,
+        source_audio,
         start,
         duration,
         media_dir / "Q1_corner.mp4",
